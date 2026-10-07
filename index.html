@@ -1,0 +1,1441 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="AMINI — دانشنامه سبک پردازنده، کارت گرافیک و لیتوگرافی؛ از مبانی تا معماری و مشخصات فنی مدل‌های مهم.">
+<title>AMINI | CPU · GPU · Lithography</title>
+
+<style>
+:root{
+  --bg:#0b1020;
+  --panel:#111827;
+  --panel2:#0f172a;
+  --text:#eef2ff;
+  --muted:#a7b0c3;
+  --line:#26324a;
+  --accent:#7dd3fc;
+  --accent2:#a78bfa;
+  --good:#86efac;
+  --warn:#fcd34d;
+  --max:1180px
+}
+
+*{box-sizing:border-box}
+
+html{
+  scroll-behavior:smooth
+}
+
+body{
+  margin:0;
+  background:linear-gradient(
+    180deg,
+    #070b15 0,
+    #0b1020 34%,
+    #0b1020 100%
+  );
+  color:var(--text);
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Tahoma,
+    Arial,
+    sans-serif;
+  line-height:1.9
+}
+
+.wrap{
+  width:min(calc(100% - 32px),var(--max));
+  margin:auto
+}
+
+a{
+  color:var(--accent);
+  text-decoration:none
+}
+
+a:hover{
+  text-decoration:underline
+}
+
+.top{
+  position:sticky;
+  top:0;
+  z-index:10;
+  background:rgba(7,11,21,.9);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line)
+}
+
+nav{
+  display:flex;
+  gap:18px;
+  align-items:center;
+  justify-content:space-between;
+  min-height:62px
+}
+
+.brand{
+  font-weight:900;
+  letter-spacing:.8px;
+  font-size:1.15rem
+}
+
+.links{
+  display:flex;
+  gap:14px;
+  flex-wrap:wrap
+}
+
+.links a{
+  color:var(--muted);
+  font-size:.94rem
+}
+
+.hero{
+  padding:76px 0 48px;
+  border-bottom:1px solid var(--line)
+}
+
+.hero h1{
+  font-size:clamp(2rem,4vw,3.8rem);
+  line-height:1.1;
+  margin:0 0 16px
+}
+
+.hero p{
+  max-width:850px;
+  color:var(--muted);
+  font-size:1.05rem;
+  margin:0
+}
+
+.badge{
+  display:inline-block;
+  padding:5px 10px;
+  border:1px solid var(--line);
+  border-radius:999px;
+  color:var(--accent);
+  font-size:.8rem;
+  margin-bottom:14px;
+  background:#0d1427
+}
+
+.section{
+  padding:58px 0;
+  border-bottom:1px solid var(--line)
+}
+
+.section h2{
+  margin:0 0 10px;
+  font-size:1.8rem
+}
+
+.lead{
+  color:var(--muted);
+  max-width:900px
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(12,1fr);
+  gap:16px
+}
+
+.card{
+  grid-column:span 12;
+  background:
+    linear-gradient(
+      180deg,
+      var(--panel),
+      var(--panel2)
+    );
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:20px;
+  box-shadow:0 12px 32px rgba(0,0,0,.18)
+}
+
+.card.half{
+  grid-column:span 6
+}
+
+.card h3{
+  margin-top:0
+}
+
+.facts{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px 14px;
+  font-size:.92rem
+}
+
+.fact{
+  border-bottom:1px dashed #29344a;
+  padding:7px 0
+}
+
+.fact b{
+  color:#dbe4ff
+}
+
+.pill{
+  display:inline-block;
+  margin:3px 4px 3px 0;
+  padding:3px 9px;
+  border:1px solid var(--line);
+  border-radius:999px;
+  font-size:.78rem;
+  color:var(--muted)
+}
+
+.tabs{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin:18px 0
+}
+
+.tab{
+  border:1px solid var(--line);
+  background:#0d1427;
+  color:var(--muted);
+  padding:8px 14px;
+  border-radius:10px;
+  cursor:pointer
+}
+
+.tab.active{
+  color:#fff;
+  border-color:#456281;
+  background:#182238
+}
+
+.controls{
+  display:grid;
+  grid-template-columns:2fr 1fr;
+  gap:12px;
+  margin:20px 0
+}
+
+.controls input,
+.controls select{
+  width:100%;
+  background:#0c1324;
+  color:#fff;
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:12px 14px;
+  outline:none
+}
+
+.tablewrap{
+  overflow:auto;
+  border:1px solid var(--line);
+  border-radius:14px
+}
+
+.table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:980px
+}
+
+.table th,
+.table td{
+  padding:12px 11px;
+  border-bottom:1px solid var(--line);
+  text-align:right;
+  vertical-align:top
+}
+
+.table th{
+  background:#0e1629;
+  color:#dbe4ff;
+  position:sticky;
+  top:0
+}
+
+.table td{
+  color:#c3cada;
+  font-size:.92rem
+}
+
+.table tr:last-child td{
+  border-bottom:none
+}
+
+.note{
+  border-right:3px solid var(--accent2);
+  padding:12px 16px;
+  background:#0d1427;
+  color:#cbd5e1;
+  border-radius:10px;
+  margin:16px 0
+}
+
+.two{
+  columns:2 320px;
+  column-gap:28px
+}
+
+.two p,
+.two li{
+  break-inside:avoid
+}
+
+.footer{
+  padding:40px 0 70px;
+  color:var(--muted);
+  font-size:.9rem
+}
+
+.source-list{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px
+}
+
+.source{
+  padding:12px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:#0e1527
+}
+
+.small{
+  font-size:.82rem;
+  color:var(--muted)
+}
+
+.hidden{
+  display:none
+}
+
+@media(max-width:820px){
+
+  .card.half{
+    grid-column:span 12
+  }
+
+  .controls{
+    grid-template-columns:1fr
+  }
+
+  .source-list{
+    grid-template-columns:1fr
+  }
+
+  .facts{
+    grid-template-columns:1fr
+  }
+
+  .links{
+    display:none
+  }
+
+  .hero{
+    padding-top:56px
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="top">
+  <div class="wrap">
+    <nav>
+
+      <div class="brand">
+        AMINI
+      </div>
+
+      <div class="links">
+        <a href="#cpu">CPU</a>
+        <a href="#gpu">GPU</a>
+        <a href="#lithography">Lithography</a>
+        <a href="#compare">مقایسه</a>
+        <a href="#sources">منابع</a>
+      </div>
+
+    </nav>
+  </div>
+</div>
+
+<header class="hero">
+
+  <div class="wrap">
+
+    <span class="badge">
+      دانشنامه سبک سخت‌افزار
+    </span>
+
+    <h1>
+      پردازنده، GPU و لیتوگرافی؛
+      از مبانی تا جزئیات
+    </h1>
+
+    <p>
+      این صفحه یک مرجع فشرده اما فنی برای شناخت CPU و GPU است.
+      مدل‌ها بر اساس خانواده و نسل دسته‌بندی شده‌اند و برای هر مدل،
+      معماری، مشخصات کلیدی، کاربرد و تاریخ معرفی/عرضه ثبت شده است.
+      «شروع ساخت کارخانه‌ای» معمولاً به‌صورت روز دقیق عمومی نمی‌شود؛
+      بنابراین تاریخ تولید کارخانه‌ای جعل نشده و تاریخ رسمی معرفی یا
+      عرضه، جداگانه ثبت می‌شود.
+    </p>
+
+  </div>
+
+</header>
+
+<section class="section">
+
+  <div class="wrap">
+
+    <h2>
+      اول یک اصل مهم
+    </h2>
+
+    <div class="note">
+
+      <strong>
+        نانومتر ≠ اندازه ساده ترانزیستور.
+      </strong>
+
+      نام‌هایی مثل 7nm، 5nm، 4nm، 3nm و 2nm را نباید
+      مثل یک خط‌کش برای تمام ابعاد ترانزیستور تفسیر کرد.
+
+      در نسل‌های جدید، شماره گره فرایندی بیشتر یک نام/کلاس
+      فرایند است و به مجموعه‌ای از چگالی، توان، عملکرد و فناوری
+      ساخت اشاره می‌کند.
+
+    </div>
+
+    <div class="two">
+
+      <p>
+
+        <strong>CPU</strong>
+
+        برای اجرای منطق عمومی، سیستم‌عامل، برنامه‌ها،
+        شاخه‌زنی، مدیریت کارهای متنوع و کنترل بخش‌های مختلف
+        سیستم ساخته شده است.
+
+        در معماری‌های مدرن، افزایش هسته‌ها، بهبود IPC،
+        کش، پیش‌بینی شاخه، پهنای باند حافظه و شتاب‌دهنده‌های
+        اختصاصی همگی روی نتیجه نهایی اثر دارند.
+
+      </p>
+
+      <p>
+
+        <strong>GPU</strong>
+
+        برای اجرای تعداد بسیار زیادی عملیات موازی طراحی شده است.
+
+        این ساختار آن را برای رندر گرافیک، محاسبات ماتریسی،
+        هوش مصنوعی، پردازش تصویر و بعضی بارهای علمی مناسب می‌کند.
+
+        بنابراین مقایسه مستقیم CPU و GPU با صرفاً فرکانس یا
+        تعداد هسته، مقایسه کاملی نیست.
+
+      </p>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<section id="cpu" class="section">
+
+  <div class="wrap">
+
+    <h2>
+      CPU — پردازنده‌ها
+    </h2>
+
+    <p class="lead">
+
+      فهرست زیر مجموعه‌ای از مدل‌های شاخص و مهم دسکتاپ/سرور است
+      و چند نسل اصلی را پوشش می‌دهد.
+
+      برای جلوگیری از اطلاعات ساختگی، تاریخ هر رکورد به
+      «تاریخ معرفی/عرضه عمومی» اشاره می‌کند؛ تاریخ دقیق شروع
+      تولید کارخانه‌ای در بیشتر موارد عمومی نیست.
+
+    </p>
+
+    <div class="tabs" id="cpuTabs">
+
+      <button class="tab active" data-family="all">
+        همه
+      </button>
+
+      <button class="tab" data-family="Intel">
+        Intel
+      </button>
+
+      <button class="tab" data-family="AMD">
+        AMD
+      </button>
+
+    </div>
+
+    <div class="controls">
+
+      <input
+        id="cpuSearch"
+        placeholder="جست‌وجوی مدل، معماری، سوکت، کاربرد..."
+        aria-label="جست‌وجوی پردازنده"
+      >
+
+      <select id="cpuSort">
+
+        <option value="new">
+          جدیدتر به قدیمی‌تر
+        </option>
+
+        <option value="old">
+          قدیمی‌تر به جدیدتر
+        </option>
+
+        <option value="name">
+          نام مدل
+        </option>
+
+      </select>
+
+    </div>
+
+    <div class="tablewrap">
+
+      <table class="table">
+
+        <thead>
+
+          <tr>
+            <th>برند / مدل</th>
+            <th>معماری</th>
+            <th>هسته / Thread</th>
+            <th>فرکانس</th>
+            <th>کش</th>
+            <th>فرایند</th>
+            <th>سوکت / پلتفرم</th>
+            <th>تاریخ معرفی/عرضه</th>
+            <th>کاربرد</th>
+          </tr>
+
+        </thead>
+
+        <tbody id="cpuRows"></tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<section id="gpu" class="section">
+
+  <div class="wrap">
+
+    <h2>
+      GPU — کارت‌های گرافیکی
+    </h2>
+
+    <p class="lead">
+
+      در این بخش مدل‌های شاخص NVIDIA، AMD و Intel آمده‌اند؛
+      همراه با معماری، حافظه، واحدهای محاسباتی کلیدی، توان
+      و تاریخ عرضه.
+
+      مشخصات «کارت» می‌تواند بسته به سازنده برد، خنک‌کننده
+      و اورکلاک تغییر کند؛ مقادیر زیر مبنای مدل مرجع GPU هستند.
+
+    </p>
+
+    <div class="tabs" id="gpuTabs">
+
+      <button class="tab active" data-family="all">
+        همه
+      </button>
+
+      <button class="tab" data-family="NVIDIA">
+        NVIDIA
+      </button>
+
+      <button class="tab" data-family="AMD">
+        AMD
+      </button>
+
+      <button class="tab" data-family="Intel">
+        Intel
+      </button>
+
+    </div>
+
+    <div class="controls">
+
+      <input
+        id="gpuSearch"
+        placeholder="جست‌وجوی مدل، معماری، حافظه، قابلیت..."
+        aria-label="جست‌وجوی کارت گرافیک"
+      >
+
+      <select id="gpuSort">
+
+        <option value="new">
+          جدیدتر به قدیمی‌تر
+        </option>
+
+        <option value="old">
+          قدیمی‌تر به جدیدتر
+        </option>
+
+        <option value="name">
+          نام مدل
+        </option>
+
+      </select>
+
+    </div>
+
+    <div class="tablewrap">
+
+      <table class="table">
+
+        <thead>
+
+          <tr>
+            <th>برند / مدل</th>
+            <th>معماری</th>
+            <th>واحد اصلی</th>
+            <th>VRAM</th>
+            <th>رابط حافظه</th>
+            <th>قابلیت‌های مهم</th>
+            <th>توان تقریبی</th>
+            <th>تاریخ عرضه</th>
+            <th>کاربرد</th>
+          </tr>
+
+        </thead>
+
+        <tbody id="gpuRows"></tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<section id="lithography" class="section">
+
+  <div class="wrap">
+
+    <h2>
+      Lithography — لیتوگرافی نیمه‌رسانا
+    </h2>
+
+    <div class="grid">
+
+      <article class="card half">
+
+        <h3>
+          Photolithography
+        </h3>
+
+        <p>
+
+          لیتوگرافی نوری یکی از مراحل کلیدی ساخت تراشه است.
+          در این فرایند الگوهای بسیار ریز روی لایه‌های ویفر
+          منتقل می‌شوند.
+
+        </p>
+
+      </article>
+
+      <article class="card half">
+
+        <h3>
+          DUV
+        </h3>
+
+        <p>
+
+          Deep Ultraviolet شامل چند نسل از طول موج‌های نوری
+          از جمله 248nm و 193nm است و هنوز در بسیاری از
+          لایه‌های ساخت تراشه مورد استفاده قرار می‌گیرد.
+
+        </p>
+
+      </article>
+
+      <article class="card half">
+
+        <h3>
+          EUV
+        </h3>
+
+        <p>
+
+          Extreme Ultraviolet با طول موج حدود 13.5nm امکان
+          ایجاد الگوهای بسیار ریز را فراهم می‌کند و در
+          ساخت گره‌های پیشرفته نقش مهمی دارد.
+
+        </p>
+
+      </article>
+
+      <article class="card half">
+
+        <h3>
+          High-NA EUV
+        </h3>
+
+        <p>
+
+          نسل پیشرفته‌تر EUV با Numerical Aperture بالاتر
+          برای ادامه مقیاس‌گذاری در گره‌های بسیار پیشرفته
+          توسعه یافته است.
+
+        </p>
+
+      </article>
+
+    </div>
+
+    <div class="note">
+
+      دستگاه لیتوگرافی مستقیماً «CPU آماده» تولید نمی‌کند.
+      این دستگاه یکی از ابزارهای کلیدی در زنجیره ساخت
+      ویفر و انتقال الگوهای مدار است.
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<section id="compare" class="section">
+
+  <div class="wrap">
+
+    <h2>
+      CPU در برابر GPU
+    </h2>
+
+    <div class="grid">
+
+      <article class="card half">
+
+        <h3>
+          CPU
+        </h3>
+
+        <p>
+          تعداد هسته کمتر اما هسته‌های پیچیده‌تر،
+          مناسب برای کارهای ترتیبی، منطق عمومی،
+          سیستم‌عامل و اجرای برنامه‌های متنوع.
+        </p>
+
+      </article>
+
+      <article class="card half">
+
+        <h3>
+          GPU
+        </h3>
+
+        <p>
+          تعداد بسیار زیادی واحد پردازشی موازی،
+          مناسب برای رندرینگ، ماتریس، AI و پردازش
+          داده‌هایی که قابلیت موازی‌سازی بالایی دارند.
+        </p>
+
+      </article>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<section id="sources" class="section">
+
+  <div class="wrap">
+
+    <h2>
+      منابع
+    </h2>
+
+    <div class="source-list">
+
+      <div class="source">
+        <strong>Intel ARK</strong>
+        <br>
+        <span class="small">
+          مشخصات فنی پردازنده‌های Intel
+        </span>
+      </div>
+
+      <div class="source">
+        <strong>AMD</strong>
+        <br>
+        <span class="small">
+          مشخصات رسمی Ryzen و Radeon
+        </span>
+      </div>
+
+      <div class="source">
+        <strong>NVIDIA</strong>
+        <br>
+        <span class="small">
+          مشخصات رسمی GeForce و معماری GPU
+        </span>
+      </div>
+
+      <div class="source">
+        <strong>Intel Arc</strong>
+        <br>
+        <span class="small">
+          اطلاعات رسمی پردازنده‌های گرافیکی Intel
+        </span>
+      </div>
+
+      <div class="source">
+        <strong>ASML</strong>
+        <br>
+        <span class="small">
+          اطلاعات فناوری DUV و EUV
+        </span>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<footer class="footer">
+
+  <div class="wrap">
+
+    <strong>AMINI</strong>
+
+    <p>
+      دانشنامه سبک سخت‌افزار — CPU · GPU · Lithography
+    </p>
+
+  </div>
+
+</footer>
+
+
+<script>
+
+const CPUs = [
+
+{
+  b:'Intel',
+  m:'Core i9-12900K',
+  a:'Alder Lake',
+  c:'16 / 24',
+  f:'تا 5.2 GHz',
+  cache:'30 MB',
+  p:'Intel 7',
+  s:'LGA1700',
+  d:'2021-11-04',
+  u:'گیمینگ / تولید محتوا'
+},
+
+{
+  b:'Intel',
+  m:'Core i9-13900K',
+  a:'Raptor Lake',
+  c:'24 / 32',
+  f:'تا 5.8 GHz',
+  cache:'36 MB',
+  p:'Intel 7',
+  s:'LGA1700',
+  d:'2022-10-20',
+  u:'گیمینگ / تولید محتوا'
+},
+
+{
+  b:'Intel',
+  m:'Core i9-14900K',
+  a:'Raptor Lake Refresh',
+  c:'24 / 32',
+  f:'تا 6.0 GHz',
+  cache:'36 MB',
+  p:'Intel 7',
+  s:'LGA1700',
+  d:'2023-10-17',
+  u:'دسکتاپ رده‌بالا'
+},
+
+{
+  b:'Intel',
+  m:'Core Ultra 9 285K',
+  a:'Arrow Lake',
+  c:'24 / 24',
+  f:'تا 5.7 GHz',
+  cache:'36 MB',
+  p:'TSMC N3B',
+  s:'LGA1851',
+  d:'2024-10-24',
+  u:'دسکتاپ رده‌بالا / AI PC'
+},
+
+{
+  b:'Intel',
+  m:'Core Ultra 7 265K',
+  a:'Arrow Lake',
+  c:'20 / 20',
+  f:'تا 5.5 GHz',
+  cache:'30 MB',
+  p:'TSMC N3B',
+  s:'LGA1851',
+  d:'2024-10-24',
+  u:'دسکتاپ رده‌بالا'
+},
+
+{
+  b:'Intel',
+  m:'Core Ultra 5 245K',
+  a:'Arrow Lake',
+  c:'14 / 14',
+  f:'تا 5.2 GHz',
+  cache:'24 MB',
+  p:'TSMC N3B',
+  s:'LGA1851',
+  d:'2024-10-24',
+  u:'میان‌رده / AI PC'
+},
+
+{
+  b:'AMD',
+  m:'Ryzen 9 7950X',
+  a:'Zen 4',
+  c:'16 / 32',
+  f:'4.5 تا 5.7 GHz',
+  cache:'80 MB',
+  p:'TSMC 5nm + 6nm I/O',
+  s:'AM5',
+  d:'2022-09-27',
+  u:'گیمینگ / تولید محتوا'
+},
+
+{
+  b:'AMD',
+  m:'Ryzen 7 7800X3D',
+  a:'Zen 4 + 3D V-Cache',
+  c:'8 / 16',
+  f:'4.2 تا 5.0 GHz',
+  cache:'96 MB',
+  p:'TSMC 5nm + 6nm I/O',
+  s:'AM5',
+  d:'2023-04-06',
+  u:'گیمینگ'
+},
+
+{
+  b:'AMD',
+  m:'Ryzen 9 7950X3D',
+  a:'Zen 4 + 3D V-Cache',
+  c:'16 / 32',
+  f:'تا 5.7 GHz',
+  cache:'128 MB',
+  p:'TSMC 5nm + 6nm I/O',
+  s:'AM5',
+  d:'2023-02-28',
+  u:'گیمینگ / رندرینگ'
+},
+
+{
+  b:'AMD',
+  m:'Ryzen 9 9950X',
+  a:'Zen 5',
+  c:'16 / 32',
+  f:'4.3 تا 5.7 GHz',
+  cache:'80 MB',
+  p:'TSMC 4nm + 6nm I/O',
+  s:'AM5',
+  d:'2024-08-15',
+  u:'دسکتاپ رده‌بالا'
+},
+
+{
+  b:'AMD',
+  m:'Ryzen 7 9800X3D',
+  a:'Zen 5 + 3D V-Cache',
+  c:'8 / 16',
+  f:'4.7 تا 5.2 GHz',
+  cache:'104 MB',
+  p:'TSMC 4nm + 6nm I/O',
+  s:'AM5',
+  d:'2024-11-07',
+  u:'گیمینگ رده‌بالا'
+},
+
+{
+  b:'AMD',
+  m:'Ryzen 9 9950X3D',
+  a:'Zen 5 + 3D V-Cache',
+  c:'16 / 32',
+  f:'تا 5.7 GHz',
+  cache:'144 MB',
+  p:'TSMC 4nm + 6nm I/O',
+  s:'AM5',
+  d:'2025-03-12',
+  u:'گیمینگ / تولید محتوا'
+},
+
+{
+  b:'AMD',
+  m:'Ryzen 7 9850X3D',
+  a:'Zen 5 + 3D V-Cache',
+  c:'8 / 16',
+  f:'4.7 تا 5.6 GHz',
+  cache:'104 MB',
+  p:'TSMC 4nm + 6nm I/O',
+  s:'AM5',
+  d:'2026-01-29',
+  u:'گیمینگ رده‌بالا'
+}
+
+];
+
+
+const GPUs = [
+
+{
+  b:'NVIDIA',
+  m:'GeForce RTX 2080',
+  a:'Turing',
+  core:'CUDA Cores',
+  units:'2944',
+  v:'8 GB GDDR6',
+  bus:'256-bit',
+  feat:'RT Cores · Tensor Cores · DLSS',
+  p:'~215 W',
+  d:'2018-09-20',
+  u:'گیمینگ / Creator'
+},
+
+{
+  b:'NVIDIA',
+  m:'GeForce RTX 3080',
+  a:'Ampere',
+  core:'CUDA Cores',
+  units:'8704',
+  v:'10 GB GDDR6X',
+  bus:'320-bit',
+  feat:'2nd-gen RT · 3rd-gen Tensor · DLSS',
+  p:'~320 W',
+  d:'2020-09-17',
+  u:'گیمینگ 4K'
+},
+
+{
+  b:'NVIDIA',
+  m:'GeForce RTX 4090',
+  a:'Ada Lovelace',
+  core:'CUDA Cores',
+  units:'16384',
+  v:'24 GB GDDR6X',
+  bus:'384-bit',
+  feat:'3rd-gen RT · 4th-gen Tensor · DLSS 3',
+  p:'~450 W',
+  d:'2022-10-12',
+  u:'گیمینگ / Creator / AI'
+},
+
+{
+  b:'NVIDIA',
+  m:'GeForce RTX 4070',
+  a:'Ada Lovelace',
+  core:'CUDA Cores',
+  units:'5888',
+  v:'12 GB GDDR6X',
+  bus:'192-bit',
+  feat:'3rd-gen RT · 4th-gen Tensor · DLSS 3',
+  p:'~200 W',
+  d:'2023-04-13',
+  u:'1440p / Creator'
+},
+
+{
+  b:'NVIDIA',
+  m:'GeForce RTX 5090',
+  a:'Blackwell',
+  core:'CUDA Cores',
+  units:'21760',
+  v:'32 GB GDDR7',
+  bus:'512-bit',
+  feat:'4th-gen RT · 5th-gen Tensor · DLSS 4',
+  p:'575 W',
+  d:'2025-01-30',
+  u:'گیمینگ / AI / Creator'
+},
+
+{
+  b:'NVIDIA',
+  m:'GeForce RTX 5080',
+  a:'Blackwell',
+  core:'CUDA Cores',
+  units:'10752',
+  v:'16 GB GDDR7',
+  bus:'256-bit',
+  feat:'4th-gen RT · 5th-gen Tensor · DLSS 4',
+  p:'360 W',
+  d:'2025-01-30',
+  u:'گیمینگ 4K / Creator'
+},
+
+{
+  b:'NVIDIA',
+  m:'GeForce RTX 5070 Ti',
+  a:'Blackwell',
+  core:'CUDA Cores',
+  units:'8960',
+  v:'16 GB GDDR7',
+  bus:'256-bit',
+  feat:'4th-gen RT · 5th-gen Tensor · DLSS 4',
+  p:'~300 W',
+  d:'2025-02-20',
+  u:'1440p / 4K'
+},
+
+{
+  b:'AMD',
+  m:'Radeon RX 7900 XTX',
+  a:'RDNA 3',
+  core:'Compute Units',
+  units:'96',
+  v:'24 GB GDDR6',
+  bus:'384-bit',
+  feat:'Ray Accelerators · AI Accelerators · FSR',
+  p:'355 W',
+  d:'2022-12-13',
+  u:'گیمینگ 4K'
+},
+
+{
+  b:'AMD',
+  m:'Radeon RX 7900 XT',
+  a:'RDNA 3',
+  core:'Compute Units',
+  units:'84',
+  v:'20 GB GDDR6',
+  bus:'320-bit',
+  feat:'Ray Accelerators · AI Accelerators · FSR',
+  p:'300 W',
+  d:'2022-12-13',
+  u:'گیمینگ 4K'
+},
+
+{
+  b:'AMD',
+  m:'Radeon RX 7800 XT',
+  a:'RDNA 3',
+  core:'Compute Units',
+  units:'60',
+  v:'16 GB GDDR6',
+  bus:'256-bit',
+  feat:'Ray Accelerators · AI Accelerators · FSR',
+  p:'263 W',
+  d:'2023-09-06',
+  u:'گیمینگ 1440p'
+},
+
+{
+  b:'AMD',
+  m:'Radeon RX 9070 XT',
+  a:'RDNA 4',
+  core:'Compute Units',
+  units:'64',
+  v:'16 GB GDDR6',
+  bus:'256-bit',
+  feat:'Ray Accelerators · AI Accelerators · FSR 4',
+  p:'304 W',
+  d:'2025-03-06',
+  u:'گیمینگ 1440p / 4K'
+},
+
+{
+  b:'Intel',
+  m:'Arc A770',
+  a:'Alchemist',
+  core:'Xe Cores',
+  units:'32',
+  v:'8/16 GB GDDR6',
+  bus:'256-bit',
+  feat:'XeSS · Ray Tracing · XMX',
+  p:'225 W',
+  d:'2022-10-12',
+  u:'گیمینگ / Creator'
+},
+
+{
+  b:'Intel',
+  m:'Arc B580',
+  a:'Battlemage / Xe2',
+  core:'Xe Cores',
+  units:'20',
+  v:'12 GB GDDR6',
+  bus:'192-bit',
+  feat:'XeSS 2 · 2nd-gen RT · XMX',
+  p:'190 W',
+  d:'2024-12-13',
+  u:'1440p / Value'
+}
+
+];
+
+
+function validDate(x){
+
+  return /^\d{4}-\d{2}-\d{2}$/.test(x);
+
+}
+
+
+function dateText(x){
+
+  return validDate(x)
+    ? new Date(x + 'T00:00:00').toLocaleDateString(
+        'fa-IR',
+        {
+          year:'numeric',
+          month:'long',
+          day:'numeric'
+        }
+      )
+    : x + ' (اطلاعات رسمی به‌صورت فصل/ربع سال)';
+
+}
+
+
+let cpuFamily='all';
+let gpuFamily='all';
+
+const cpuRows=document.getElementById('cpuRows');
+const gpuRows=document.getElementById('gpuRows');
+
+
+function renderCPU(){
+
+  const q=
+    document
+      .getElementById('cpuSearch')
+      .value
+      .trim()
+      .toLowerCase();
+
+  const s=
+    document
+      .getElementById('cpuSort')
+      .value;
+
+  let arr=CPUs.filter(
+    x =>
+      (cpuFamily==='all' || x.b===cpuFamily) &&
+      Object
+        .values(x)
+        .join(' ')
+        .toLowerCase()
+        .includes(q)
+  );
+
+  arr.sort(
+    (a,b)=>
+      s==='name'
+        ? a.m.localeCompare(b.m)
+        : s==='old'
+          ? (a.d>b.d?1:-1)
+          : (a.d<b.d?1:-1)
+  );
+
+  cpuRows.innerHTML=
+    arr.map(
+      x => `
+      <tr>
+
+        <td>
+          <strong>${x.b}</strong><br>
+          ${x.m}
+        </td>
+
+        <td>${x.a}</td>
+        <td>${x.c}</td>
+        <td>${x.f}</td>
+        <td>${x.cache}</td>
+        <td>${x.p}</td>
+        <td>${x.s}</td>
+        <td>${dateText(x.d)}</td>
+        <td>${x.u}</td>
+
+      </tr>
+      `
+    ).join('') ||
+    '<tr><td colspan="9">موردی پیدا نشد.</td></tr>';
+
+}
+
+
+function renderGPU(){
+
+  const q=
+    document
+      .getElementById('gpuSearch')
+      .value
+      .trim()
+      .toLowerCase();
+
+  const s=
+    document
+      .getElementById('gpuSort')
+      .value;
+
+  let arr=GPUs.filter(
+    x =>
+      (gpuFamily==='all' || x.b===gpuFamily) &&
+      Object
+        .values(x)
+        .join(' ')
+        .toLowerCase()
+        .includes(q)
+  );
+
+  arr.sort(
+    (a,b)=>
+      s==='name'
+        ? a.m.localeCompare(b.m)
+        : s==='old'
+          ? (a.d>b.d?1:-1)
+          : (a.d<b.d?1:-1)
+  );
+
+  gpuRows.innerHTML=
+    arr.map(
+      x => `
+      <tr>
+
+        <td>
+          <strong>${x.b}</strong><br>
+          ${x.m}
+        </td>
+
+        <td>${x.a}</td>
+
+        <td>
+          ${x.core}<br>
+          ${x.units}
+        </td>
+
+        <td>${x.v}</td>
+        <td>${x.bus}</td>
+        <td>${x.feat}</td>
+        <td>${x.p}</td>
+        <td>${dateText(x.d)}</td>
+        <td>${x.u}</td>
+
+      </tr>
+      `
+    ).join('') ||
+    '<tr><td colspan="9">موردی پیدا نشد.</td></tr>';
+
+}
+
+
+document
+  .querySelectorAll('#cpuTabs .tab')
+  .forEach(
+    b =>
+      b.addEventListener(
+        'click',
+        () => {
+
+          document
+            .querySelectorAll('#cpuTabs .tab')
+            .forEach(
+              t => t.classList.remove('active')
+            );
+
+          b.classList.add('active');
+
+          cpuFamily=b.dataset.family;
+
+          renderCPU();
+
+        }
+      )
+  );
+
+
+document
+  .querySelectorAll('#gpuTabs .tab')
+  .forEach(
+    b =>
+      b.addEventListener(
+        'click',
+        () => {
+
+          document
+            .querySelectorAll('#gpuTabs .tab')
+            .forEach(
+              t => t.classList.remove('active')
+            );
+
+          b.classList.add('active');
+
+          gpuFamily=b.dataset.family;
+
+          renderGPU();
+
+        }
+      )
+  );
+
+
+document
+  .getElementById('cpuSearch')
+  .addEventListener('input',renderCPU);
+
+document
+  .getElementById('cpuSort')
+  .addEventListener('change',renderCPU);
+
+document
+  .getElementById('gpuSearch')
+  .addEventListener('input',renderGPU);
+
+document
+  .getElementById('gpuSort')
+  .addEventListener('change',renderGPU);
+
+
+renderCPU();
+renderGPU();
+
+</script>
+
+</body>
+</html>
